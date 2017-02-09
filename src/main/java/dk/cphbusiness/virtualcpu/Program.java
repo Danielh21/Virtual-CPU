@@ -9,17 +9,14 @@ public class Program implements Iterable<Integer> {
     this.lines = lines;
     }
   
+  public int getLengthOfProgram(){
+      return lines.length;
+  }
+  
   public int get(int index) {
     String line = lines[index];
     if (line.charAt(0) == '0' || line.charAt(0) == '1') {
       return Integer.parseInt(line, 2);
-      }
-    else if (line.startsWith("MOV ")) {
-      String[] parts = line.split(" ");
-      int r = parts[1].equals("B") ? 1 : 0;
-      int o = Integer.parseInt(parts[2]);
-      
-      return 0b0010_0000 | (r << 3) | o; 
       }
     else throw new UnsupportedOperationException("Don't know "+line);
     }
