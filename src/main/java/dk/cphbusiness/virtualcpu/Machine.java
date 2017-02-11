@@ -52,7 +52,7 @@ public class Machine {
     }
     else if(instr == 0b0001_0100){
         //`0001 0100` | `MOV A B` | B ← A; IP++
-        movAB(instr);
+        movATooB(instr);
     }
     else if(instr == 0b0000_1100 ){
         //`0000 1100` | `ALWAYS` | F ← **true**; IP++
@@ -89,6 +89,10 @@ public class Machine {
     else if(instr == 0b0000_1011){
         //`0000 1011` | `NEQ` | F ← A ≠ B; IP++
         aNotEqualBChangeF(instr);
+    }
+    else if(instr == 0b0001_0101){
+        // `0001 0101` | `MOV B A` | A ← B; IP++
+        moveBtooA(instr);
     }
     else{
         System.out.println("Error! Not Supported");
@@ -154,7 +158,7 @@ public class Machine {
         cpu.incIp();
     }
 
-    private void movAB(int instr) {
+    private void movATooB(int instr) {
         //`0001 0100` | `MOV A B` | B ← A; IP++
         cpu.setB(cpu.getA());
         cpu.incIp();
@@ -211,6 +215,11 @@ public class Machine {
     private void aNotEqualBChangeF(int instr) {
         //`0000 1011` | `NEQ` | F ← A ≠ B; IP++
         cpu.setFlag(cpu.getA() != cpu.getB());
+        cpu.incIp();
+    }
+
+    private void moveBtooA(int instr) {
+        cpu.setA(cpu.getB());
         cpu.incIp();
     }
   }
