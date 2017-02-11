@@ -20,6 +20,7 @@ public class Main {
         System.out.println(">Enter To Contiune ");
         scan.nextLine();
         machine.tick();
+        bcc.printProgram(System.out);
         machine.print(System.out);
     }
     

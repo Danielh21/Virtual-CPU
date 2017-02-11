@@ -15,12 +15,27 @@ import java.util.ArrayList;
 public class BineryCodeConstructor {
     
    
-    // if AA at end, it needs adjusting
+    // if XX at end, it needs adjusting
     private ArrayList<String[]> list = new ArrayList<>();
     private String[] nOP = {"NO operation", "00000000"};
     private String[] addAB = {"ADD A B", "00000001"};
     private String[] halt = {"Halt", "00001111"};
-    private String[] movroAA = {"Move r into o", "0010 rooo"}; 
+    private String[] incA = {"A++", "00010110"};
+    private String[] decA = {"A--", "00010111"};
+    private String[] mul = {"A <= A*B", "00000010"};
+    private String[] divi = {"A <= A/B", "00000011"};
+    private String[] always = {"F <= True", "00001100"};
+    private String[] zero = {"F <= if A=0", "00000100"};
+    private String[] negA = {"F <= if A<0", "00000101"};
+    private String[] posA = {"F <= if A>0", "00000110"};
+    private String[] notZeroA = {"F <= if A!=0", "00000111"};
+    private String[] aEQb = {"F <= if A=B", "00001000"};
+    private String[] aSmall = {"F <= if A<B", "00001001"};
+    private String[] aBigger = {"F <= if A>B", "00001010"};
+    private String[] aNotEQb = {"F <= if A!=B", "00001011"};
+    private String[] movAB = {"B <= A", "00010100"};
+    
+    private String[] movroXX = {"Move r into o", "0010 rooo"}; 
     
     public BineryCodeConstructor(){
         setBineryList();
@@ -29,8 +44,23 @@ public class BineryCodeConstructor {
     
     private void setBineryList(){
         list.add(nOP);
-        list.add(nOP);
-        list.add(addAB);
+        list.add(incA);
+        list.add(incA);
+        list.add(movAB);
+        list.add(incA);
+        list.add(always);
+        list.add(zero);
+        list.add(negA);
+        list.add(posA);
+        list.add(notZeroA);
+        list.add(aEQb);
+        list.add(decA);
+        list.add(aEQb);
+        list.add(aSmall);
+        list.add(incA);
+        list.add(aSmall);
+        list.add(aBigger);
+        list.add(aNotEQb);
         list.add(halt);
     }
     
@@ -43,10 +73,11 @@ public class BineryCodeConstructor {
     }
     
    public void printProgram(PrintStream out){
-       out.println("Program To Be Runned: ");
+       out.println("Running Program: ");
        for (String[] command : list) {
-           out.printf("%20s %s %s\n",command[0], ": ", command[1]);
+           int index = Integer.parseInt(command[1], 2);
+           out.printf("%20s %s %3s %s\n",command[0], ": ", index, "Binery(" + command[1]+")");
        }
    }
-    
-}
+   
+   }
