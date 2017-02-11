@@ -7,8 +7,8 @@ public class Cpu {
   public static final int B = 1;
   private int a = 0;
   private int b = 0;
-  private int ip = 0;
-  private int sp = 0;
+  private static int ip = 0;
+  private static int sp = 0;
   private boolean flag = false;
   
   public void decSp() {
@@ -68,11 +68,17 @@ public class Cpu {
     out.printf("SP: %4d\n", sp);
     out.println("F:  "+flag);
     }
+  
+  public static int getStackPointerPos(){
+      return sp;
+  }
+  
+  public static int getInstructionPointerPos(){
+      return ip;
+  }
     
   }
   
-
-
 
 
 

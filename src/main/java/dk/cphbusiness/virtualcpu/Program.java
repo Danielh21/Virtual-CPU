@@ -5,7 +5,7 @@ import java.util.Iterator;
 public class Program implements Iterable<Integer> {
   private String[] lines;
   
-  public Program(String... lines) {
+  public Program(String[] lines) {
     this.lines = lines;
     }
   

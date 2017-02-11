@@ -27,8 +27,13 @@ public class Memory {
   
   
   public void print(PrintStream out, int index) {
-    out.printf("%2d: %4d %s   ", index, get(index), binary(get(index)));
-    }
+      String pointer = "  ";
+      if(Cpu.getStackPointerPos() == Cpu.getInstructionPointerPos()) pointer = "    ";
+      if(index == Cpu.getInstructionPointerPos()) pointer = ">>";
+      if(index == Cpu.getStackPointerPos()) pointer = "==";
+      if(index == Cpu.getStackPointerPos() && index == Cpu.getInstructionPointerPos()) pointer = "==>>";
+      out.printf("%2d: %s %4d %s   ", index, pointer, get(index), binary(get(index)));
+      }
   
   public void print(PrintStream out) {
     for (int index = 0; index < 16; index++) {
