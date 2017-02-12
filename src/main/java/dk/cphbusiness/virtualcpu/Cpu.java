@@ -16,6 +16,12 @@ public class Cpu {
     sp = sp - 1;
     }
   
+  public void incSp(){
+      sp++;
+      if(sp >= 64)
+      sp = 0;
+  }
+  
   public void incIp() {
     ip++;
     if (ip == 64) ip = 0;

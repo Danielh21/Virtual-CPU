@@ -37,6 +37,25 @@ public class BineryCodeConstructor {
     private String[] movBtoA = {"A <= B", "00010101"};
     
     private String[] movroXX = {"Move r into o", "0010 rooo"}; 
+    private String[] pushrXX = {"Push r on Stack", "0001 000r"}; 
+    private String[] pushrA = {"Push A on Stack", "00010000"}; 
+    private String[] pushrB = {"Push B on Stack", "00010001"}; 
+    private String[] popXX = {"Removes r from Stack", "0001 001r"}; 
+    private String[] popToA = {" A <- from Stack", "00010010"}; 
+    private String[] popToB = {" B <- from Stack", "00010011"}; 
+    private String[] ipResetX = {"* ip<-sp++; sp+= off", "0001 1ooo"}; 
+    private String[] ipResetoff3 = {"* ip<-sp++; sp+= off", "00011011"}; 
+    private String[] spOffToorXX = {"r <- [SP + o]", "0011 ooor"}; 
+    private String[] spOff1TooA = {"A <- [SP + 1]", "00110010"};
+    private String[] valueVtooRXX = {"r <- v;", "01vv vvvr"};
+    private String[] valueneg16tooA = {"A <- -16;", "01100000"};
+    private String[] valuepos15tooB = {"B <- 15;", "01011111"};
+    private String[] jumpToAdresseXX = {"if F=true, IP <- a", "10aa aaaa"};
+    private String[] jumpToAdresse30 = {"if F=true, IP <- 30", "10011110"};
+    private String[] callAdresseXX = {"--SP <-IP, IP <-a ", "11aa aaaa"};
+    private String[] callAdresse62 = {"--SP <-IP, IP <-62 ", "11111110"};
+    
+    
     
     public BineryCodeConstructor(){
         setBineryList();
@@ -45,9 +64,9 @@ public class BineryCodeConstructor {
     
     private void setBineryList(){
         list.add(nOP);
-        list.add(incA);
-        list.add(incA);
-        list.add(movAtoB);
+        list.add(callAdresse62);
+        list.add(always);
+        list.add(callAdresse62);
         list.add(halt);
     }
     

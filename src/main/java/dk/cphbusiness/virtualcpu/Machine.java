@@ -29,11 +29,6 @@ public class Machine {
        // 0000 1111 HALT - Stop the program!
             HALT();
     }
-    // ..
-    else if ((instr & 0b1111_0000) == 0b0010_0000) {
-      // `MOV r o` `0010 rooo`    
-        MOVro(instr);
-      }
     else if(instr == 0b0001_0110){
         //`0001 0110` | `INC` | A++; IP++
         incA(instr);
@@ -94,21 +89,44 @@ public class Machine {
         // `0001 0101` | `MOV B A` | A ← B; IP++
         moveBtooA(instr);
     }
+    else if ((instr & 0b1111_0000) == 0b0010_0000) {
+        // `MOV r o` `0010 rooo`    
+        moveRtooO(instr);
+      }
+    else if((instr & 0b1111_1110) == 0b0001_0000 ){
+        //`0001 000r` | `PUSH r` | [--SP] ← r; IP++
+        pushrOnStack(instr);
+    }
+    else if((instr & 0b1111_1110) ==0b0001_0010){
+        //`0001 001r` | `POP r` | r ← [SP++]; IP++
+        popStack(instr);
+    }
+    else if((instr & 0b1111_1000) == 0b0001_1000){
+        //`0001 1ooo` | `RTN +o` | IP ← [SP++]; SP += o; IP++
+        notSure(instr);
+    }
+    else if((instr & 0b1111_0000) == 0b0011_0000){
+        //`0011 ooor` | `MOV o r` | r ← [SP + o]; IP++
+        moveSpOffsetTOr(instr);
+    }
+    else if((instr & 0b1100_0000) == 0b0100_0000){
+        //`01vv vvvr` | `MOV v r` | r ← v; IP++
+        valueToR(instr);
+    }
+    else if((instr & 0b1100_0000) == 0b1000_0000){
+        //`10aa aaaa` | `JMP #a` | 
+        //**if** F **then** IP ← a **else** IP++
+        jumpToAddresse(instr);
+    }
+    else if((instr & 0b1100_0000) == 0b1100_0000){
+        //`11aa aaaa` | `CALL #a` | 
+        //**if** F **then** [--SP] ← IP; IP ← a **else** IP++
+        callAddresse(instr);
+    }
     else{
         System.out.println("Error! Not Supported");
         throw new UnsupportedOperationException();
      }
-    }
-
-    private void MOVro(int instr) {
-        // `MOV r o` `0010 rooo`
-        //[SP + o] ← r; IP++
-        
-        int o = instr & 0b0000_0111;
-        int r = (instr & 0b0000_1000) >> 3;
-        if (r == Cpu.A) memory.set(cpu.getSp() + o, cpu.getA());
-        else memory.set(cpu.getSp() + o, cpu.getB());
-        cpu.setIp(cpu.getIp() + 1);
     }
 
     private void HALT() {
@@ -221,5 +239,122 @@ public class Machine {
     private void moveBtooA(int instr) {
         cpu.setA(cpu.getB());
         cpu.incIp();
+    }
+     private void moveRtooO(int instr) {
+        // `MOV r o` `0010 rooo`
+        //[SP + o] ← r; IP++
+        
+        int o = instr & 0b0000_0111;
+        int r = (instr & 0b0000_1000) >> 3;
+        if (r == Cpu.A) memory.set(cpu.getSp() + o, cpu.getA());
+        else memory.set(cpu.getSp() + o, cpu.getB());
+        cpu.incIp();
+    }
+
+    private void pushrOnStack(int instr) {
+        //`0001 000r` | `PUSH r` | [--SP] ← r; IP++
+        int r = (instr & 0b0000_0001);
+        cpu.decSp();
+        if(r == Cpu.A) memory.set(cpu.getSp(), cpu.getA());
+        else memory.set(cpu.getSp(), cpu.getB());
+        
+        cpu.incIp();
+        
+    }
+
+    private void popStack(int instr) {
+        // `0001 001r` | `POP r` | r ← [SP++]; IP++
+        int r = (instr & 0b0000_0001);
+        if(r==Cpu.A)cpu.setA(memory.get(cpu.getSp()));
+        else cpu.setB(memory.get(cpu.getSp()));
+        
+        cpu.incSp();
+        cpu.incIp();
+    }
+
+    private void notSure(int instr) {
+        // `0001 1ooo` | `RTN +o` | IP ← [SP++]; SP += o; IP++
+        /*
+        Im not a 100 % sure what the assigment want me to do here
+        but what im doing:
+        SP++
+        IP <= SP
+        SP += offset
+        IP++
+        */
+        int offset = instr & 0b0000_0111;
+        cpu.incSp();
+        cpu.setIp(cpu.getSp());
+        for (int i = 0; i < offset; i++) {
+            cpu.incSp();
+        }
+        cpu.incIp();
+    }
+
+    /**
+     * Moves the value at SP + Offset into r 
+     * @param instr Instructions
+     */
+    private void moveSpOffsetTOr(int instr) {
+        //`0011 ooor` | `MOV o r` | r ← [SP + o]; IP++
+       
+        int r = instr & 0b0000_0001;
+        int o = (instr & 0b0000_1110) >> 1;
+        
+        if(r == Cpu.A) cpu.setA(memory.get(cpu.getSp() + o));
+        else cpu.setB(memory.get(cpu.getSp() + o));
+        
+        cpu.incIp();
+    }
+
+    private void valueToR(int instr) {
+        //`01vv vvvr` | `MOV v r` | r ← v; IP++
+        
+        int r = instr & 0b0000_0001;
+        int v;
+        int sign = (instr & 0b0010_0000) >>5; // will Either be one(negative number) or zero(positive number)
+        if(sign != 1){
+            //Means it's a positive number
+        v = (instr & 0b0001_1110) >>1;
+        }
+        else{
+            String binery = Integer.toBinaryString(instr);
+            binery = "0" + binery; // because ^^ that method ignores zeros, but we know we have one infront of
+            binery = binery.substring(2, 7);
+            short res = (short)Integer.parseInt(binery, 2);
+            v= -res;
+        }
+        
+        if(r == Cpu.A)cpu.setA(v);
+        else cpu.setB(v);
+        cpu.incIp();
+        
+        
+    }
+
+    private void jumpToAddresse(int instr) {
+        //`10aa aaaa` | `JMP #a` | 
+        //**if** F **then** IP ← a **else** IP++
+        int adresse = instr & 0b0011_1111;
+        if(cpu.isFlag()) cpu.setIp(adresse);
+        else cpu.incIp();
+    }
+
+    /**
+     * If flag = true
+     * Sets Sp too Ip's adresse and then Sp--
+     * Ip then jumps to adresse!
+     * @param instr Instructions
+     */
+    private void callAddresse(int instr) {
+        //`11aa aaaa` | `CALL #a` | 
+        //**if** F **then** [--SP] ← IP; IP ← a **else** IP++
+        int adresse = instr & 0b0011_1111;
+        if(cpu.isFlag()){
+            cpu.setSp(cpu.getIp());
+            cpu.decSp();
+            cpu.setIp(adresse);
+        }
+        else cpu.incIp();
     }
   }
