@@ -282,8 +282,8 @@ public class Machine {
         SP += offset
         IP++
         */
-        int offset = instr & 0b0000_0111;
         cpu.incSp();
+        int offset = instr & 0b0000_0111;
         cpu.setIp(cpu.getSp());
         for (int i = 0; i < offset; i++) {
             cpu.incSp();

@@ -37,6 +37,7 @@ public class BineryCodeConstructor {
     private String[] movBtoA = {"A <= B", "00010101"};
     
     private String[] movroXX = {"Move r into o", "0010 rooo"}; 
+    private String[] movrAoffset3 = {"Move r into o", "00101001"}; 
     private String[] pushrXX = {"Push r on Stack", "0001 000r"}; 
     private String[] pushrA = {"Push A on Stack", "00010000"}; 
     private String[] pushrB = {"Push B on Stack", "00010001"}; 
@@ -44,16 +45,19 @@ public class BineryCodeConstructor {
     private String[] popToA = {" A <- from Stack", "00010010"}; 
     private String[] popToB = {" B <- from Stack", "00010011"}; 
     private String[] ipResetX = {"* ip<-sp++; sp+= off", "0001 1ooo"}; 
-    private String[] ipResetoff3 = {"* ip<-sp++; sp+= off", "00011011"}; 
+    private String[] ipResetoff3 = {"* ip<-sp++; sp+= 0", "00011011"}; 
+    private String[] ipResetoff0 = {"* ip<-sp++; sp+= off", "00011000"}; 
     private String[] spOffToorXX = {"r <- [SP + o]", "0011 ooor"}; 
     private String[] spOff1TooA = {"A <- [SP + 1]", "00110010"};
     private String[] valueVtooRXX = {"r <- v;", "01vv vvvr"};
-    private String[] valueneg16tooA = {"A <- -16;", "01100000"};
+    private String[] valuepos5tooA = {"A <- 5;", "01001010"};
+    private String[] valuepos1tooA = {"A <- 1;", "01000001"};
     private String[] valuepos15tooB = {"B <- 15;", "01011111"};
     private String[] jumpToAdresseXX = {"if F=true, IP <- a", "10aa aaaa"};
     private String[] jumpToAdresse30 = {"if F=true, IP <- 30", "10011110"};
+    private String[] jumpToAdresse12 = {"if F=true, IP <- 12", "10001100"};
     private String[] callAdresseXX = {"--SP <-IP, IP <-a ", "11aa aaaa"};
-    private String[] callAdresse62 = {"--SP <-IP, IP <-62 ", "11111110"};
+    private String[] callAdresse6 = {"--SP <-IP, IP <-6 ", "11000110"};
     
     
     
@@ -63,11 +67,28 @@ public class BineryCodeConstructor {
     
     
     private void setBineryList(){
-        list.add(nOP);
-        list.add(callAdresse62);
+        list.add(valuepos5tooA);
+        list.add(pushrA);
         list.add(always);
-        list.add(callAdresse62);
+        list.add(callAdresse6);
+        list.add(popToA);
         list.add(halt);
+        list.add(spOff1TooA);
+        list.add(notZeroA);
+        list.add(jumpToAdresse12);
+        list.add(valuepos5tooA);
+        list.add(movrAoffset3);
+        list.add(ipResetoff0);
+        list.add(pushrA);
+        list.add(decA);
+        list.add(pushrA);
+        list.add(always);
+        list.add(callAdresse6);
+        list.add(popToB);
+        list.add(popToA);
+        list.add(mul);
+        list.add(movrAoffset3);
+        list.add(ipResetoff0);
     }
     
     public String[] getCommands(){
