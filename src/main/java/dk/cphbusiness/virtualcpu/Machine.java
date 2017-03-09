@@ -103,7 +103,7 @@ public class Machine {
     }
     else if((instr & 0b1111_1000) == 0b0001_1000){
         //`0001 1ooo` | `RTN +o` | IP ← [SP++]; SP += o; IP++
-        notSure(instr);
+        sure(instr);
     }
     else if((instr & 0b1111_0000) == 0b0011_0000){
         //`0011 ooor` | `MOV o r` | r ← [SP + o]; IP++
@@ -272,18 +272,18 @@ public class Machine {
         cpu.incIp();
     }
 
-    private void notSure(int instr) {
+    private void sure(int instr) {
         // `0001 1ooo` | `RTN +o` | IP ← [SP++]; SP += o; IP++
         /*
         Im not a 100 % sure what the assigment want me to do here
         but what im doing:
-        SP++
         IP <= SP
+        SP++
         SP += offset
         IP++
         */
+        cpu.setIp(memory.get(cpu.getSp()));
         int offset = instr & 0b0000_0111;
-        cpu.setIp(cpu.getSp());
         cpu.incSp();
         for (int i = 0; i < offset; i++) {
             cpu.incSp();
@@ -351,8 +351,8 @@ public class Machine {
         //**if** F **then** [--SP] ← IP; IP ← a **else** IP++
         int adresse = instr & 0b0011_1111;
         if(cpu.isFlag()){
-            cpu.setSp(cpu.getIp());
             cpu.decSp();
+            memory.set(cpu.getSp(), cpu.getIp());
             cpu.setIp(adresse);
         }
         else cpu.incIp();

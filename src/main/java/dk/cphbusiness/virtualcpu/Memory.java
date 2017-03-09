@@ -19,7 +19,8 @@ public class Memory {
   
   public String binary(int value) {
     String result = "";
-    for (int i = 7; i >= 0; i--) {
+    for (int i = 8; i >= 0; i--) {
+        if(i == 4 ) result += " ";
       result += (value & (1 << i)) == 0 ? "0" : "1";
       }
     return result;
