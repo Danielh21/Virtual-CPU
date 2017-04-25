@@ -7,7 +7,7 @@ public class Main {
   public static void main(String[] args) {
     System.out.println("Welcome to the CPU program");
     BineryCodeConstructor bcc = new BineryCodeConstructor();
-    String[] commands = bcc.getCommands();
+    String[] commands = bcc.getFacFiveTailCommands();
     bcc.printProgram(System.out);
     Program program = new Program(commands);
     Machine machine = new Machine();
@@ -20,6 +20,7 @@ public class Main {
     while(Machine.keepRunning){
         times ++;
         System.out.println(">Enter To Contiune " + "Times Runned: " + times);
+        //scan.nextLine();
         machine.tick();
         bcc.printProgram(System.out);
         machine.print(System.out);

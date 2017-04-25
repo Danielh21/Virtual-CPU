@@ -190,7 +190,12 @@ public class Machine {
 
     private void zeroChangeF(int instr) {
         //`0000 0100` | `ZERO` | F ← A = 0; IP++
-        cpu.setFlag(cpu.getA() == 0);
+        if(cpu.getA() == 0){
+            cpu.setFlag(true);
+        }
+        else{
+            cpu.setFlag(false);
+        }
         cpu.incIp();
     }
 
